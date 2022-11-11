@@ -9,6 +9,8 @@ class Board {
             ref_ctx: document.getElementById("board").getContext("2d"),
         }
         this.ui.ref_canvas.addEventListener("click", this.clickHandler);
+        this.setCanvasSizeAndResolution()
+
         this.squares = []; // becomes 2d array through this.initiateSquares();
         this.states = {}; // holds additional states like who's turn it is etc.
 
@@ -45,7 +47,7 @@ class Board {
     }
     clickHandler(e) {
         let position = {x: e.clientX, y: clientY};
-        
+        let field = {}
     }
     initiateSquares() {
         // creates a two dimensional array with the 64 squares which have a default value of false (meaning nothing is there)
@@ -63,6 +65,9 @@ class Board {
             halfMoveClock: undefined,
             fullMoveNumber: undefined,
         }
+    }
+    setCanvasSizeAndResolution() {
+
     }
 
 }
