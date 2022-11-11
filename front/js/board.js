@@ -38,7 +38,16 @@ class Board {
         this.states.halfMoveClock = parts[4];
         this.states.fullMoveNumber = parts[5];
 
-        
+        // insert const board into this.squares by looping?
+        // default layout
+        // 0 0 0 0 0 0 0 0    <- top left has coordinates 0, 0 and holds black pieces in default position
+        // P P P P P P P P
+        // 0 0 0 0 0 0 0 0
+        // 0 0 0 0 0 0 0 0
+        // 0 0 0 0 0 0 0 0
+        // 0 0 0 0 0 0 0 0
+        // p p p p p p p p
+        // 0 0 0 0 0 0 0 0
 
 
     }
@@ -46,8 +55,8 @@ class Board {
 
     }
     clickHandler(e) {
-        let position = {x: e.clientX, y: clientY};
-        let field = {}
+        const position = {x: e.clientX, y: clientY};
+        const field = {}
     }
     initiateSquares() {
         // creates a two dimensional array with the 64 squares which have a default value of false (meaning nothing is there)
