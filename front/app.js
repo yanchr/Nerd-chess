@@ -1,1 +1,3 @@
-console.log("hello")
+const game = new Game();
+requestAnimationFrame(game.main);
+

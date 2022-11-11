@@ -1,0 +1,29 @@
+/* Global */
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+
+/* Chessboard Related */
+
+.container {
+
+}
+
+#board-container {
+    width: 100vh;
+    height: 100vh;
+    background-color: grey;
+}
+
+
+/* Chat Related */
+
+#chat-container {
+
+}
+#chat-input {
+    
+}
