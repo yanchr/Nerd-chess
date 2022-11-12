@@ -192,7 +192,7 @@ class Board {
         const piece = this.getPieceAtSquare(sourceSquare)
 
         if (piece) {
-            console.log("piece exists")
+            console.log("piece exists!", this.getPieceAtSquare(targetSquare), "at target")
             const isValidMove = piece.validateMove(targetSquare, this.getPieceAtSquare(targetSquare), this);
             const isUnpinned = true; // no clue how to check that so problem for future us
             // a way to solve this would be to have a seperate represantation of the board that stores per square wether or not it is endagered by either/or black and white
@@ -205,14 +205,5 @@ class Board {
                 this.hasChanged = true;
             }
         }
-
-
-
-
-        const temp = this.squares[sourceSquare.x][sourceSquare.y];
-        this.squares[sourceSquare.x][sourceSquare.y] = false;
-        this.squares[targetSquare.x][targetSquare.y] = temp;
-
-        this.hasChanged = true;
     }
 }
