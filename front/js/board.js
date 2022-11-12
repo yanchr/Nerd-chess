@@ -7,6 +7,8 @@ class Board {
             ref_boardContainer: document.getElementById("board-container"),
             ref_canvas: document.getElementById("board"),
             ref_ctx: document.getElementById("board").getContext("2d"),
+            boardSize: 0,
+            squareSize: 0,
         }
         this.setCanvasSizeAndResolution();
 
@@ -26,6 +28,21 @@ class Board {
     }
     render() {
         
+        // clear the canvas
+        this.ui.ref_ctx.clearRect(0, 0, this.ui.boardSize, this.ui.boardSize);
+
+        this.ui.ref_ctx.fillStyle = 'rgb(50,50,60)';
+        this.ui.ref_ctx.fillRect(0, 0, this.ui.boardSize, this.ui.boardSize)
+
+        // draw squares
+        this.ui.ref_ctx.fillStyle = 'rgb(194, 194, 194)';
+        for (let x = 0; x < this.squares.length; x++) {
+            for (let y = 0; y < this.squares[x].length; y++) {
+                if ((x+y) % 2 == 0) { // alte wenn dä nid genius isch weiss ich au nid
+                    this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize)
+                }
+            }
+        }
     }
     buildFromFEN(position) {
         // translate FEN string into this.squares array
@@ -105,6 +122,8 @@ class Board {
         console.log(mouseLocation)
     }
     chatInput(strLocation) {
+
+        // works only for like "e4" not "Nc3" (yet)
         const targetSquare = {
             x: parseInt(strLocation[0].toLowerCase().charCodeAt(0)) - 97,
             y: 8 - parseInt(strLocation[1]),
@@ -129,7 +148,18 @@ class Board {
         }
     }
     setCanvasSizeAndResolution() {
+        const scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
 
+        this.ui.ref_canvas.style.width = `${this.ui.ref_boardContainer.clientWidth}px`;
+        this.ui.ref_canvas.style.height = `${this.ui.ref_boardContainer.clientHeight}px`;
+
+        this.ui.ref_canvas.width = Math.floor(this.ui.ref_boardContainer.clientWidth * scale);
+        this.ui.ref_canvas.height = Math.floor(this.ui.ref_boardContainer.clientHeight * scale);
+        // Normalize coordinate system to use CSS pixels.
+        this.ui.ref_ctx.scale(scale, scale);
+
+        this.ui.boardSize = this.ui.ref_canvas.clientHeight;
+        this.ui.squareSize = this.ui.boardSize / 8;
     }
 
 }

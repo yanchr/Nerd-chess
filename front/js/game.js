@@ -23,8 +23,7 @@ class Game {
     clickHandler(e) {
         game.board.mouseInput({x: e.clientX, y: e.clientY});
     }
-    chatHandler(location) {
-        // location example would be: 'e4'
-        this.board.chatInput(location)
+    chatHandler() {
+        this.chat.onInput();
     }
 }
