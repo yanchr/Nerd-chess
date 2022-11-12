@@ -19,6 +19,11 @@ class Board {
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         console.log(this.squares)
+
+        // to store things like what square is selected when client uses mouse input (cringe)
+        this.utility = {
+            selected: false,
+        }
     }
     main() {
         if (this.hasChanged) {
@@ -126,7 +131,13 @@ class Board {
     }
     mouseInput(mouseLocation) {
         const square = {x: Math.floor(mouseLocation.x / this.ui.squareSize), y: Math.floor(mouseLocation.y / this.ui.squareSize)}
-        console.log(square)
+        
+        if (!this.utility.selected) {
+            this.utility.selected = square;
+        } else {
+            this.validateMove(this.utility.selected, square);
+            this.utility.selected = false;
+        }
     }
     chatInput(strLocation) {
 
@@ -168,5 +179,40 @@ class Board {
         this.ui.boardSize = this.ui.ref_canvas.clientHeight;
         this.ui.squareSize = this.ui.boardSize / 8;
     }
+    getPieceAtSquare(square) {
+        return this.squares[square.x][square.y];
+    }
+    validateMove(sourceSquare, targetSquare) {
 
+        // check if source has piece
+        // execute validation from that piece
+        // execute moving from that piece (since e.g. castling involves more that one piece)
+        // if isValid -> advance movecount, change color etc.
+
+        const piece = this.getPieceAtSquare(sourceSquare)
+
+        if (piece) {
+            console.log("piece exists")
+            const isValidMove = piece.validateMove(targetSquare, this.getPieceAtSquare(targetSquare), this);
+            const isUnpinned = true; // no clue how to check that so problem for future us
+            // a way to solve this would be to have a seperate represantation of the board that stores per square wether or not it is endagered by either/or black and white
+
+            if (isValidMove && isUnpinned) {
+                console.log("is valid && and unpinned")
+
+                piece.moveTo(targetSquare, this.getPieceAtSquare(targetSquare), this);
+
+                this.hasChanged = true;
+            }
+        }
+
+
+
+
+        const temp = this.squares[sourceSquare.x][sourceSquare.y];
+        this.squares[sourceSquare.x][sourceSquare.y] = false;
+        this.squares[targetSquare.x][targetSquare.y] = temp;
+
+        this.hasChanged = true;
+    }
 }
