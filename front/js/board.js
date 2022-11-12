@@ -18,6 +18,7 @@ class Board {
         this.initiateSquares();
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        console.log(this.squares)
     }
     main() {
         if (this.hasChanged) {
@@ -35,18 +36,23 @@ class Board {
         this.ui.ref_ctx.fillRect(0, 0, this.ui.boardSize, this.ui.boardSize)
 
         // draw squares
-        this.ui.ref_ctx.fillStyle = 'rgb(194, 194, 194)';
         for (let x = 0; x < this.squares.length; x++) {
             for (let y = 0; y < this.squares[x].length; y++) {
+                // squares
                 if ((x+y) % 2 == 0) { // alte wenn dä nid genius isch weiss ich au nid
+                    this.ui.ref_ctx.fillStyle = 'rgb(194, 194, 194)';
                     this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize)
+                }
+                // piece
+                if (this.squares[x][y]) {
+                    this.squares[x][y].render(this.ui.ref_ctx, this.ui.squareSize);
                 }
             }
         }
     }
-    buildFromFEN(position) {
+    buildFromFEN(FENString) {
         // translate FEN string into this.squares array
-        const parts = position.split(" ");
+        const parts = FENString.split(" ");
 
         const board = parts[0];
         this.states.activeSide = parts[1];
@@ -75,32 +81,32 @@ class Board {
 
                 switch (rows[y][i].toLowerCase()) {
                     case "p":
-                        this.squares[x][y] = new Pawn(rows[y][i])
+                        this.squares[x][y] = new Pawn(rows[y][i], {x: x, y: y})
                         x++;
                         break;
 
                     case "r":
-                        this.squares[x][y] = new Rook(rows[y][i])
+                        this.squares[x][y] = new Rook(rows[y][i], {x: x, y: y})
                         x++;
                         break;
                     
                     case "n":
-                        this.squares[x][y] = new Knight(rows[y][i])
+                        this.squares[x][y] = new Knight(rows[y][i], {x: x, y: y})
                         x++;
                         break;
 
                     case "b":
-                        this.squares[x][y] = new Bishop(rows[y][i])
+                        this.squares[x][y] = new Bishop(rows[y][i], {x: x, y: y})
                         x++;
                         break;
                     
                     case "q":
-                        this.squares[x][y] = new Queen(rows[y][i])
+                        this.squares[x][y] = new Queen(rows[y][i], {x: x, y: y})
                         x++;
                         break;
                     
                     case "k":
-                        this.squares[x][y] = new King(rows[y][i])
+                        this.squares[x][y] = new King(rows[y][i], {x: x, y: y})
                         x++;
                         break;
                 
@@ -119,7 +125,8 @@ class Board {
 
     }
     mouseInput(mouseLocation) {
-        console.log(mouseLocation)
+        const square = {x: Math.floor(mouseLocation.x / this.ui.squareSize), y: Math.floor(mouseLocation.y / this.ui.squareSize)}
+        console.log(square)
     }
     chatInput(strLocation) {
 

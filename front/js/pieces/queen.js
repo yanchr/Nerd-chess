@@ -1,8 +1,6 @@
 class Queen extends Piece {
-    constructor(type) {
-        super(type);
+    constructor(type, position) {
+        super(type, position);
     }
-    render() {
 
-    }
 }

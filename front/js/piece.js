@@ -1,5 +1,5 @@
 class Piece {
-    constructor(type) {
+    constructor(type, position) {
         this.type = type;
         if (this.type == this.type.toUpperCase()) {
             this.side = "w";
@@ -8,6 +8,20 @@ class Piece {
             this.side = "b";
             this.facingDirection = 1;
         }
+        this.position = {
+            x: position.x,
+            y: position.y,
+        }
+    }
+    render(ctx, squareSize) {
+        ctx.fillStyle = this.side == "w" ? 'rgb(255,255,255)' : 'rgb(0,0,0)';
+        ctx.strokeStyle = this.side == "w" ? 'rgb(255,255,255)' : 'rgb(0,0,0)';
+
+        ctx.beginPath();
+        ctx.arc(this.position.x * squareSize + squareSize/2, this.position.y * squareSize + squareSize/2, squareSize/3, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        ctx.fillText(this.type.toUpperCase(), this.position.x * squareSize + squareSize/2, this.position.y * squareSize + squareSize/2)
     }
     computeIsOnBoard() {
         
