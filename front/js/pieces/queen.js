@@ -1,4 +1,4 @@
-class Pawn extends Piece {
+class Queen extends Piece {
     constructor(type) {
         super(type);
     }
