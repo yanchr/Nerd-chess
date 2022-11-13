@@ -2,13 +2,15 @@ class Rook extends Piece {
     constructor(type, position) {
         super(type, position);
     }
-    validateMove() {
+    validateMove(targetSquare, pieceAtTarget, board) {
+        
 
     }
-    moveTo() {
+    moveTo(targetSquare, pieceAtTarget, board) {
+        board.updateEnPassantTargetSquare();
         
     }
-    isTaken() {
+    isTaken(board) {
 
     }
 }

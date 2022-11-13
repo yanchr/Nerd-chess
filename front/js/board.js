@@ -25,6 +25,9 @@ class Board {
             selected: false,
         }
     }
+
+    /* General */
+
     main() {
         if (this.hasChanged) {
             // rerender the board only if necessary
@@ -55,6 +58,35 @@ class Board {
             }
         }
     }
+
+    tryMove(sourceSquare, targetSquare) {
+
+        // check if source has piece
+        // execute validation from that piece
+        // execute moving from that piece (since e.g. castling involves more that one piece)
+        // if isValid -> advance movecount, change color etc.
+
+        const piece = this.getPieceAtSquare(sourceSquare)
+
+        if (piece && piece.side == this.states.activeSide) {
+            const validationSignature = piece.validateMove(targetSquare, this.getPieceAtSquare(targetSquare), this);
+            const isUnpinned = true; // no clue how to check that so problem for future us
+            // a way to solve this would be to have a seperate represantation of the board that stores per square wether or not it is endagered by either/or black and white
+
+            if (validationSignature.isValidMove && isUnpinned) {
+                piece.moveTo(validationSignature, targetSquare, this.getPieceAtSquare(targetSquare), this);
+
+                this.hasChanged = true;
+                this.states.activeSide == "w" ? this.states.activeSide = "b" : this.states.activeSide = "w";
+                if (this.states.activeSide == "w") {
+                    this.states.fullMoveNumber++;
+                }
+            }
+        }
+    }
+
+    /* FEN Converters */
+
     buildFromFEN(FENString) {
         // translate FEN string into this.squares array
         const parts = FENString.split(" ");
@@ -129,25 +161,48 @@ class Board {
     getFEN() {
 
     }
+
+    /* InputHanlers */
+
     mouseInput(mouseLocation) {
         const square = {x: Math.floor(mouseLocation.x / this.ui.squareSize), y: Math.floor(mouseLocation.y / this.ui.squareSize)}
         
         if (!this.utility.selected) {
             this.utility.selected = square;
+            console.log(`Selected Square: ${JSON.stringify(square)}`)
         } else {
-            this.validateMove(this.utility.selected, square);
+            this.tryMove(this.utility.selected, square);
+            console.log(`Try Move: ${JSON.stringify(this.utility.selected)} to ${JSON.stringify(square)}`)
             this.utility.selected = false;
         }
     }
     chatInput(strLocation) {
 
         // works only for like "e4" not "Nc3" (yet)
-        const targetSquare = {
+        const targetSquare = this.convertStrLocationToPosition(strLocation)
+        console.log(targetSquare)
+    }
+
+    /* BoardPosition Converters */
+
+    convertStrLocationToPosition(strLocation) {
+        return {
             x: parseInt(strLocation[0].toLowerCase().charCodeAt(0)) - 97,
             y: 8 - parseInt(strLocation[1]),
         }
-        console.log(targetSquare)
     }
+    convertPositionToStrLocation(position) {
+        return `${String.fromCharCode(position.x+97)}${8-position.y}`;
+    }
+
+    /* StateUpdators */
+
+    updateEnPassantTargetSquare(strLocation = "-") {
+        this.states.enPassantTargetSquare = strLocation;
+    }
+
+    /* InitiationMethods */
+
     initiateSquares() {
         // creates a two dimensional array with the 64 squares which have a default value of false (meaning nothing is there)
         this.squares = [];
@@ -179,32 +234,10 @@ class Board {
         this.ui.boardSize = this.ui.ref_canvas.clientHeight;
         this.ui.squareSize = this.ui.boardSize / 8;
     }
+
+    /* Utility */
+
     getPieceAtSquare(square) {
         return this.squares[square.x][square.y];
-    }
-    validateMove(sourceSquare, targetSquare) {
-
-        // check if source has piece
-        // execute validation from that piece
-        // execute moving from that piece (since e.g. castling involves more that one piece)
-        // if isValid -> advance movecount, change color etc.
-
-        const piece = this.getPieceAtSquare(sourceSquare)
-
-        if (piece && piece.side == this.states.activeSide) {
-            console.log("piece exists!", this.getPieceAtSquare(targetSquare), "at target")
-            const isValidMove = piece.validateMove(targetSquare, this.getPieceAtSquare(targetSquare), this);
-            const isUnpinned = true; // no clue how to check that so problem for future us
-            // a way to solve this would be to have a seperate represantation of the board that stores per square wether or not it is endagered by either/or black and white
-
-            if (isValidMove && isUnpinned) {
-                console.log("is valid && and unpinned")
-
-                piece.moveTo(targetSquare, this.getPieceAtSquare(targetSquare), this);
-
-                this.hasChanged = true;
-                this.states.activeSide == "w" ? this.states.activeSide = "b" : this.states.activeSide = "w";
-            }
-        }
     }
 }
