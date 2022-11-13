@@ -187,14 +187,13 @@ class Board {
             }
             if (y < this.squares.length-1) {
                 board += "/"
-                
             }
         }
 
         return `${board} ${this.states.activeSide} ${this.states.castlingAbility} ${this.states.enPassantTargetSquare} ${this.states.halfMoveClock} ${this.states.fullMoveNumber}`;
     }
 
-    /* InputHanlers */
+    /* InputHandlers */
 
     mouseInput(mouseLocation) {
         const square = {x: Math.floor(mouseLocation.x / this.ui.squareSize), y: Math.floor(mouseLocation.y / this.ui.squareSize)}
