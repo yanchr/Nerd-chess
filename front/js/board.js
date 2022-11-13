@@ -16,8 +16,9 @@ class Board {
         this.states = {}; // holds additional states like who's turn it is etc.
 
         this.initiateSquares();
-        // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
+        // this.buildFromFEN("rnbqkbnr/1P6/8/8/8/8/8/RNBQKBNR w KQkq - 0 1");
         console.log(this.squares)
 
         // to store things like what square is selected when client uses mouse input (cringe)

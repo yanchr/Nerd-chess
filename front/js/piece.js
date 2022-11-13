@@ -23,9 +23,6 @@ class Piece {
 
         ctx.fillText(this.type.toUpperCase(), this.position.x * squareSize + squareSize/2, this.position.y * squareSize + squareSize/2)
     }
-    computeIsOnBoard() {
-        
-    }
     animate() {
         // a function that is same for all pieces that shows a linear interpolation of the old to the new position (optional)
     }
