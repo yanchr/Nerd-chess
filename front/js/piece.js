@@ -12,10 +12,21 @@ class Piece {
             x: position.x,
             y: position.y,
         }
+        this.textures = new Textures()
     }
     render(ctx, squareSize) {
         ctx.fillStyle = this.side == "w" ? 'rgb(255,255,255)' : 'rgb(0,0,0)';
         ctx.strokeStyle = this.side == "w" ? 'rgb(255,255,255)' : 'rgb(0,0,0)';
+        
+        const img = new Image()
+        const positionX = this.position.x * squareSize
+        const positionY = this.position.y * squareSize
+        img.onload = (() => {
+            console.log(squareSize)
+            ctx.drawImage(img, positionX + 15, positionY, 80, 100)
+        })
+
+        img.src = this.textures.getSvgScr(this.type, this.side)
 
         ctx.beginPath();
         ctx.arc(this.position.x * squareSize + squareSize/2, this.position.y * squareSize + squareSize/2, squareSize/3, 0, 2 * Math.PI);
@@ -29,4 +40,5 @@ class Piece {
     animate() {
         // a function that is same for all pieces that shows a linear interpolation of the old to the new position (optional)
     }
+
 }

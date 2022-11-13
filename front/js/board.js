@@ -90,7 +90,7 @@ class Board {
     buildFromFEN(FENString) {
         // translate FEN string into this.squares array
         const parts = FENString.split(" ");
-
+        console.log(FENString)
         const board = parts[0];
         this.states.activeSide = parts[1];
         this.states.castlingAbility = parts[2];

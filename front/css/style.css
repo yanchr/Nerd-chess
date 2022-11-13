@@ -27,3 +27,11 @@ body {
 #chat-input {
     
 }
+
+.figure {
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    left: 1000px;
+    top: 100px
+}
