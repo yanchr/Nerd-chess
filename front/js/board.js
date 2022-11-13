@@ -49,8 +49,10 @@ class Board {
                 // squares
                 if ((x+y) % 2 == 0) { // alte wenn dä nid genius isch weiss ich au nid
                     this.ui.ref_ctx.fillStyle = 'rgb(194, 194, 194)';
-                    this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize)
+                    this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize);
                 }
+                this.ui.ref_ctx.fillStyle = 'rgb(0,0,255)';
+                this.ui.ref_ctx.fillText(this.convertPositionToStrLocation({x: x, y: y}), x * this.ui.squareSize, y * this.ui.squareSize+10)
                 // piece
                 if (this.squares[x][y]) {
                     this.squares[x][y].render(this.ui.ref_ctx, this.ui.squareSize);
@@ -197,9 +199,8 @@ class Board {
 
     /* StateUpdators */
 
-    updateEnPassantTargetSquare(strLocation = "-", piece = undefined) {
+    updateEnPassantTargetSquare(strLocation = "-") {
         this.states.enPassantTargetSquare = strLocation;
-        this.states.enPassantTargetPiece = piece;
     }
 
     /* InitiationMethods */

@@ -7,7 +7,7 @@ class Pawn extends Piece {
             return {isValidMove: true, exitCode: 1};
         }
         if (this.validatePushTwo(targetSquare, pieceAtTarget, board)) {
-            return {isValidMove: true, exitCode: 2, piece: this};
+            return {isValidMove: true, exitCode: 2};
         }
         if (this.validateTakes(targetSquare, pieceAtTarget, board)) {
             return {isValidMove: true, exitCode: 3};
@@ -19,9 +19,6 @@ class Pawn extends Piece {
     }
     
     moveTo(validationSignature, targetSquare, pieceAtTarget, board) {
-        if (validationSignature.exitCode == 4) {
-            board.states.enPassantTargetPiece.isTaken(board);
-        }
         if (validationSignature.exitCode == 2) {
             board.updateEnPassantTargetSquare(board.convertPositionToStrLocation({
                 x: this.position.x,
@@ -31,9 +28,16 @@ class Pawn extends Piece {
             board.updateEnPassantTargetSquare();
         }
 
-
         if (pieceAtTarget) {
             pieceAtTarget.isTaken(board);
+        }
+        if (validationSignature.exitCode == 4) {
+            let target = this.getEnPassantTarget(targetSquare, board)
+            if (target) {
+                target.isTaken(board);
+            } else {
+                console.error('En Passant Piece not Found')
+            }
         }
         board.squares[targetSquare.x][targetSquare.y] = this;
         board.squares[this.position.x][this.position.y] = false;
@@ -43,6 +47,10 @@ class Pawn extends Piece {
     }
     isTaken(board) {
         board.squares[this.position.x][this.position.y] = false;
+    }
+
+    getEnPassantTarget(targetSquare, board) {
+        return board.squares[targetSquare.x][targetSquare.y - this.facingDirection];
     }
 
 
