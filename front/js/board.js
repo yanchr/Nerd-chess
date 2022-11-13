@@ -16,9 +16,10 @@ class Board {
         this.states = {}; // holds additional states like who's turn it is etc.
 
         this.initiateSquares();
-        // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
-        this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
+        // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         console.log(this.squares)
+        console.log(this.getFEN())
 
         // to store things like what square is selected when client uses mouse input (cringe)
         this.utility = {
@@ -163,20 +164,31 @@ class Board {
     getFEN() {
         let board = "";
 
-        for (let x = 0; x < this.squares.length; x++) {
+        for (let y = 0; y < this.squares.length; y++) {
             let counter = 0;
-            for (let y = 0; y < this.squares[x].length; y++) {
+            for (let x = 0; x < this.squares.length; x++) {
                 switch (this.squares[x][y]) {
                     case false:
                         counter++;
                         break;
                 
                     default:
+                        if (counter > 0) {
+                            board += counter.toString();
+                            counter = 0;
+                        }
+                        board += this.squares[x][y].type;
                         break;
                 }
+            }
+            if (counter > 0) {
+                board += counter.toString();
+                counter = 0;
+            }
+            if (y < this.squares.length-1) {
+                board += "/"
                 
             }
-            board += "/"
         }
 
         return `${board} ${this.states.activeSide} ${this.states.castlingAbility} ${this.states.enPassantTargetSquare} ${this.states.halfMoveClock} ${this.states.fullMoveNumber}`;
