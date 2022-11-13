@@ -16,9 +16,10 @@ class Board {
         this.states = {}; // holds additional states like who's turn it is etc.
 
         this.initiateSquares();
-        // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
-        this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
+        // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         console.log(this.squares)
+        console.log(this.getFEN())
 
         // to store things like what square is selected when client uses mouse input (cringe)
         this.utility = {
@@ -49,8 +50,10 @@ class Board {
                 // squares
                 if ((x+y) % 2 == 0) { // alte wenn dä nid genius isch weiss ich au nid
                     this.ui.ref_ctx.fillStyle = 'rgb(194, 194, 194)';
-                    this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize)
+                    this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize);
                 }
+                this.ui.ref_ctx.fillStyle = 'rgb(0,0,255)';
+                this.ui.ref_ctx.fillText(this.convertPositionToStrLocation({x: x, y: y}), x * this.ui.squareSize, y * this.ui.squareSize+10)
                 // piece
                 if (this.squares[x][y]) {
                     this.squares[x][y].render(this.ui.ref_ctx, this.ui.squareSize);
@@ -159,10 +162,38 @@ class Board {
         }
     }
     getFEN() {
+        let board = "";
 
+        for (let y = 0; y < this.squares.length; y++) {
+            let counter = 0;
+            for (let x = 0; x < this.squares.length; x++) {
+                switch (this.squares[x][y]) {
+                    case false:
+                        counter++;
+                        break;
+                
+                    default:
+                        if (counter > 0) {
+                            board += counter.toString();
+                            counter = 0;
+                        }
+                        board += this.squares[x][y].type;
+                        break;
+                }
+            }
+            if (counter > 0) {
+                board += counter.toString();
+                counter = 0;
+            }
+            if (y < this.squares.length-1) {
+                board += "/"
+            }
+        }
+
+        return `${board} ${this.states.activeSide} ${this.states.castlingAbility} ${this.states.enPassantTargetSquare} ${this.states.halfMoveClock} ${this.states.fullMoveNumber}`;
     }
 
-    /* InputHanlers */
+    /* InputHandlers */
 
     mouseInput(mouseLocation) {
         const square = {x: Math.floor(mouseLocation.x / this.ui.squareSize), y: Math.floor(mouseLocation.y / this.ui.squareSize)}
@@ -197,9 +228,8 @@ class Board {
 
     /* StateUpdators */
 
-    updateEnPassantTargetSquare(strLocation = "-", piece = undefined) {
+    updateEnPassantTargetSquare(strLocation = "-") {
         this.states.enPassantTargetSquare = strLocation;
-        this.states.enPassantTargetPiece = piece;
     }
 
     /* InitiationMethods */
