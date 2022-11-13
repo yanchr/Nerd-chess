@@ -7,7 +7,7 @@ class Pawn extends Piece {
             return {isValidMove: true, exitCode: 1};
         }
         if (this.validatePushTwo(targetSquare, pieceAtTarget, board)) {
-            return {isValidMove: true, exitCode: 2};
+            return {isValidMove: true, exitCode: 2, piece: this};
         }
         if (this.validateTakes(targetSquare, pieceAtTarget, board)) {
             return {isValidMove: true, exitCode: 3};
@@ -19,14 +19,18 @@ class Pawn extends Piece {
     }
     
     moveTo(validationSignature, targetSquare, pieceAtTarget, board) {
+        if (validationSignature.exitCode == 4) {
+            board.states.enPassantTargetPiece.isTaken(board);
+        }
         if (validationSignature.exitCode == 2) {
             board.updateEnPassantTargetSquare(board.convertPositionToStrLocation({
                 x: this.position.x,
                 y: this.position.y + this.facingDirection,
-            }))
+            }), validationSignature.piece)
         } else {
             board.updateEnPassantTargetSquare();
         }
+
 
         if (pieceAtTarget) {
             pieceAtTarget.isTaken(board);

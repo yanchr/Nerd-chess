@@ -197,8 +197,9 @@ class Board {
 
     /* StateUpdators */
 
-    updateEnPassantTargetSquare(strLocation = "-") {
+    updateEnPassantTargetSquare(strLocation = "-", piece = undefined) {
         this.states.enPassantTargetSquare = strLocation;
+        this.states.enPassantTargetPiece = piece;
     }
 
     /* InitiationMethods */
