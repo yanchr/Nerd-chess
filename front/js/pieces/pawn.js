@@ -9,20 +9,13 @@ class Pawn extends Piece {
             return true;
         }
         // two on first
-        if (this.position.x == targetSquare.x && this.position.y + 2*this.facingDirection == targetSquare.y && !pieceAtTarget && (this.facingDirection == -1 ? 6 : 1 == this.position.y)) {
+        if (this.position.x == targetSquare.x && this.position.y + 2*this.facingDirection == targetSquare.y && !pieceAtTarget && ((this.facingDirection == -1 ? 6 : 1) == (this.position.y))) {
             console.log(2)
+            
             return true;
         }
         // one forward + one left or right if enemy piece exists
-        console.log(
-            this.position.x+1 == targetSquare.x, 
-            board.getPieceAtSquare({x: this.position.x+1, y: this.position.y}),
-            this.position.x-1 == targetSquare.x, 
-            board.getPieceAtSquare({x: this.position.x-1, y: this.position.y}),
-            this.position.y + this.facingDirection == targetSquare.y,
-            pieceAtTarget
-            )
-        if (((this.position.x+1 == targetSquare.x && board.getPieceAtSquare({x: this.position.x+1, y: this.position.y + this.facingDirection})) || (this.position.x-1 == targetSquare.x && board.getPieceAtSquare({x: this.position.x-1, y: this.position.y + this.facingDirection}))) && this.position.y + this.facingDirection == targetSquare.y && pieceAtTarget) {
+        if (((this.position.x+1 == targetSquare.x && board.getPieceAtSquare({x: this.position.x+1, y: this.position.y + this.facingDirection})) || (this.position.x-1 == targetSquare.x && board.getPieceAtSquare({x: this.position.x-1, y: this.position.y + this.facingDirection}))) && this.position.y + this.facingDirection == targetSquare.y && pieceAtTarget && pieceAtTarget.side != this.side) {
             console.log(3)
             return true;
         }

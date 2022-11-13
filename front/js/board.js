@@ -191,7 +191,7 @@ class Board {
 
         const piece = this.getPieceAtSquare(sourceSquare)
 
-        if (piece) {
+        if (piece && piece.side == this.states.activeSide) {
             console.log("piece exists!", this.getPieceAtSquare(targetSquare), "at target")
             const isValidMove = piece.validateMove(targetSquare, this.getPieceAtSquare(targetSquare), this);
             const isUnpinned = true; // no clue how to check that so problem for future us
@@ -203,6 +203,7 @@ class Board {
                 piece.moveTo(targetSquare, this.getPieceAtSquare(targetSquare), this);
 
                 this.hasChanged = true;
+                this.states.activeSide == "w" ? this.states.activeSide = "b" : this.states.activeSide = "w";
             }
         }
     }
