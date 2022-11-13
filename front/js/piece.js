@@ -23,7 +23,7 @@ class Piece {
         const positionY = this.position.y * squareSize
         img.onload = (() => {
             console.log(squareSize)
-            ctx.drawImage(img, positionX + 15, positionY, 80, 100)
+            ctx.drawImage(img, positionX, positionY, squareSize, squareSize)
         })
 
         img.src = this.textures.getSvgScr(this.type, this.side)
