@@ -16,7 +16,7 @@ class Game {
         game.board.main();
 
         requestAnimationFrame(game.main);
-    }
+    } 
     toggleVisability() {
 
     }
