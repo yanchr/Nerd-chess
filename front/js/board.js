@@ -161,7 +161,25 @@ class Board {
         }
     }
     getFEN() {
+        let board = "";
 
+        for (let x = 0; x < this.squares.length; x++) {
+            let counter = 0;
+            for (let y = 0; y < this.squares[x].length; y++) {
+                switch (this.squares[x][y]) {
+                    case false:
+                        counter++;
+                        break;
+                
+                    default:
+                        break;
+                }
+                
+            }
+            board += "/"
+        }
+
+        return `${board} ${this.states.activeSide} ${this.states.castlingAbility} ${this.states.enPassantTargetSquare} ${this.states.halfMoveClock} ${this.states.fullMoveNumber}`;
     }
 
     /* InputHanlers */
