@@ -18,6 +18,12 @@ class Rook extends Piece {
 
     // Validations
     validateVertical(targetSquare, pieceAtTarget, board) {
+
+        board.squares[this.position.x][this.position.y] = false;
+    }
+
+    // Validations
+    validateVertical(targetSquare, pieceAtTarget, board) {
         if (this.position.x == targetSquare.x) {
             for (let step = this.position.y; step < targetSquare.y; step++) {
                 const element = array[step];
