@@ -13,10 +13,14 @@ class Board {
         this.setCanvasSizeAndResolution();
 
         this.squares = []; // becomes 2d array through this.initiateSquares();
+        this.checkedSquares = []; // becomes 2d array through this.initiateSquares();
         this.states = {}; // holds additional states like who's turn it is etc.
 
         this.initiateSquares();
-        this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+        // this.buildFromFEN();
+
+        this.buildFromFEN("4p3/8/8/8/8/8/8/3P4 w KQkq - 0 1");
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         // this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
 
@@ -89,7 +93,8 @@ class Board {
 
     /* FEN Converters */
 
-    buildFromFEN(FENString) {
+    buildFromFEN(FENString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
+        console.log(this.squares)
         // translate FEN string into this.squares array
         const parts = FENString.split(" ");
         const board = parts[0];
@@ -155,6 +160,10 @@ class Board {
                         }
                         x += n;
                         break;
+                }
+                if (this.squares[x][y]) {
+                    console.log(this.squares,x, y)
+                    this.squares[x][y].updateCheckedSquares(this)
                 }
             }
         }
@@ -223,6 +232,15 @@ class Board {
     convertPositionToStrLocation(position) {
         return `${String.fromCharCode(position.x+97)}${8-position.y}`;
     }
+    positionIsOnBoard(position) {
+        if (position.x >= 0 && position.x < 8) {
+            return true;
+        }
+        if (position.y >= 0 && position.y < 8) {
+            return true;
+        }
+        return false;
+    }
 
     /* StateUpdators */
 
@@ -280,10 +298,13 @@ class Board {
     initiateSquares() {
         // creates a two dimensional array with the 64 squares which have a default value of false (meaning nothing is there)
         this.squares = [];
+        this.checkedSquares = [];
         for (let x = 0; x < 8; x++) {
             this.squares.push([]);
+            this.checkedSquares.push([]);
             for (let y = 0; y < 8; y++) {
                 this.squares[x][y] = false;
+                this.squares[x][y] = [];
             }
         }
         this.states = {
@@ -294,6 +315,7 @@ class Board {
             fullMoveNumber: undefined,
         }
     }
+
     setCanvasSizeAndResolution() {
         const scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
 

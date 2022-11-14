@@ -1,6 +1,7 @@
 class Piece {
     constructor(type, position) {
         this.type = type;
+        this.checkedSquares = [];
         if (this.type == this.type.toUpperCase()) {
             this.side = "w";
             this.facingDirection = -1; // will be useful for pawns to know in which direction they are allowed to move; negative = down the board and positive = up the board
@@ -44,5 +45,34 @@ class Piece {
     animate() {
         // a function that is same for all pieces that shows a linear interpolation of the old to the new position (optional)
     }
+    updateCheckedSquares(board, invisiblePiece = false) {
+        const oldCheckedSquares = this.checkedSquares;
+        const newCheckedSquares = [];
+        const checkedSquares = this.computeCheckedSquares(board, invisiblePiece);
+        for (let i = 0; i < checkedSquares.length; i++) {
+            let foundNewSquare = false;
+            for (let j = 0; j < oldCheckedSquares.length; j++) {
+                if (checkedSquares[i].x == oldCheckedSquares[j].x && checkedSquares[i].y == oldCheckedSquares[j].y) {
+                    oldCheckedSquares.splice(j, 1);
+                    j = oldCheckedSquares.length;
+                    foundNewSquare = true;
+                }
+            }
+            if (!foundNewSquare) {
+                newCheckedSquares.push(checkedSquares[i])
+            }
+        }
+        // this.checkedSquares unchanged
+        // oldCheckedSquares holds the ones that are no longer checked
+        // newCheckedSquares holds the ones that are newly checked
+
+        console.log(oldCheckedSquares, newCheckedSquares)
+
+
+    }
 
 }
+
+// board.list with [pieces] per square
+// each piece has own list with checked fields
+// can recompute and tell board.list to remove or add some

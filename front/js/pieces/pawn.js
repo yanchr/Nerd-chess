@@ -80,4 +80,21 @@ class Pawn extends Piece {
         }
         return false;
     }
+
+    // Compute Checked Squares
+
+    computeCheckedSquares(board, invisiblePiece) {
+        const list = [];
+
+        let position = {x: this.position.x + 1, y: this.position.y + this.facingDirection}
+        if (board.positionIsOnBoard(position)) {
+            list.push(position)
+        }
+        position = {x: this.position.x - 1, y: this.position.y + this.facingDirection}
+        if (board.positionIsOnBoard(position)) {
+            list.push(position)
+        }
+
+        return list;
+    }
 }
