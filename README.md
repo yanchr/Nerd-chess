@@ -14,3 +14,4 @@ A Chess Engine (mostly) for validating moves when playing mind-chess.
 - add Sounds
 ### Chat
 - Make the game controllable from the chat
+- 
