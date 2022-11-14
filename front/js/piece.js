@@ -18,15 +18,15 @@ class Piece {
         ctx.fillStyle = this.side == "w" ? 'rgb(255,255,255)' : 'rgb(0,0,0)';
         ctx.strokeStyle = this.side == "w" ? 'rgb(255,255,255)' : 'rgb(0,0,0)';
         
-        const img = new Image()
-        const positionX = this.position.x * squareSize
-        const positionY = this.position.y * squareSize
-        img.onload = (() => {
-            console.log(squareSize)
-            ctx.drawImage(img, positionX, positionY, squareSize, squareSize)
-        })
+        // const img = new Image()
+        // const positionX = this.position.x * squareSize
+        // const positionY = this.position.y * squareSize
+        // img.onload = (() => {
+        //     console.log(squareSize)
+        //     ctx.drawImage(img, positionX, positionY, squareSize, squareSize)
+        // })
 
-        img.src = this.textures.getSvgScr(this.type, this.side)
+        // img.src = this.textures.getSvgScr(this.type, this.side)
 
         ctx.beginPath();
         ctx.arc(this.position.x * squareSize + squareSize/2, this.position.y * squareSize + squareSize/2, squareSize/3, 0, 2 * Math.PI);

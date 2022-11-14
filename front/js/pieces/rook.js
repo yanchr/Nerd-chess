@@ -6,6 +6,9 @@ class Rook extends Piece {
         if (this.validateVertical(targetSquare, pieceAtTarget, board)) {
             return {isValidMove: true, exitCode: 1};
         }
+        if (this.validateHorizontal(targetSquare, pieceAtTarget, board)) {
+            return {isValidMove: true, exitCode: 2};
+        }
         return {isValidMove: false, exitCode: 0};
     }
     moveTo(validationSignature, targetSquare, pieceAtTarget, board) {
@@ -26,12 +29,26 @@ class Rook extends Piece {
     // Validations
     validateVertical(targetSquare, pieceAtTarget, board) {
         if (this.position.x == targetSquare.x && this.position.y != targetSquare.y) {
-            let normalizedDirection = (targetSquare.y - this.position.y) / Math.abs(targetSquare.y - this.position.y);
-            console.log(normalizedDirection)
-            for (let step = this.position.y + normalizedDirection; step < targetSquare.y - normalizedDirection; step += normalizedDirection) {
-                console.log(step)
-                if (board.squares[this.position.x][step]) {
-                    console.log("isInWay")
+            const delta = (targetSquare.y - this.position.y);
+            const normalizedDelta = (delta) / Math.abs(delta);
+            for (let step = 1; step < Math.abs(delta); step++) {
+                if (board.squares[this.position.x][this.position.y + step * normalizedDelta]) {
+                    return false;
+                }
+            }
+            if (pieceAtTarget.side == this.side) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    validateHorizontal(targetSquare, pieceAtTarget, board) {
+        if (this.position.x != targetSquare.x && this.position.y == targetSquare.y) {
+            const delta = (targetSquare.x - this.position.x);
+            const normalizedDelta = (delta) / Math.abs(delta);
+            for (let step = 1; step < Math.abs(delta); step++) {
+                if (board.squares[this.position.x + step * normalizedDelta][this.position.y]) {
                     return false;
                 }
             }
