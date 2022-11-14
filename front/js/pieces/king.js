@@ -13,6 +13,7 @@ class King extends Piece {
     }
     moveTo(validationSignature, targetSquare, pieceAtTarget, board) {
         board.updateEnPassantTargetSquare();
+        board.updateCastlingAbility(this.position);
         if (pieceAtTarget) {
             pieceAtTarget.isTaken(board);
         }

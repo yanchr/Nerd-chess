@@ -242,6 +242,26 @@ class Board {
         }
         return false;
     }
+    updateCastlingAbility(position) {
+        if (position.x == 4 && position.y == 0) { // b King
+            this.removeCastlingAbility("k")
+            this.removeCastlingAbility("q")
+        } else if (position.x == 4 && position.y == 7) { // w King
+            this.removeCastlingAbility("K")
+            this.removeCastlingAbility("Q")
+        } else if (position.x == 0 && position.y == 7) {
+            this.removeCastlingAbility("Q")
+        } else if (position.x == 7 && position.y == 7) {
+            this.removeCastlingAbility("K")
+        } else if (position.x == 0 && position.y == 0) {
+            this.removeCastlingAbility("q")
+        } else if (position.x == 7 && position.y == 0) {
+            this.removeCastlingAbility("k")
+        }
+    }
+    removeCastlingAbility(type) {
+        this.states.castlingAbility = this.states.castlingAbility.replace(type,'');
+    }
 
     /* InitiationMethods */
 
