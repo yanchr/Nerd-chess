@@ -13,22 +13,27 @@ class Piece {
             y: position.y,
         }
         this.textures = new Textures()
+        this.ui = {};
     }
     render(ctx, squareSize) {
         ctx.fillStyle = this.side == "w" ? 'rgb(255,255,255)' : 'rgb(0,0,0)';
         ctx.strokeStyle = this.side == "w" ? 'rgb(255,255,255)' : 'rgb(0,0,0)';
 
-        const size = 0.8;
-        const offset = (1-size)/2;
+        this.ui.size = 0.8;
+        this.ui.offset = (1-this.ui.size)/2;
         
-        const img = new Image()
-        const positionX = this.position.x * squareSize
-        const positionY = this.position.y * squareSize
-        img.onload = (() => {
-            ctx.drawImage(img, positionX + squareSize * offset, positionY + squareSize * offset, squareSize * size, squareSize * size)
-        })
+        this.ui.positionX = this.position.x * squareSize
+        this.ui.positionY = this.position.y * squareSize
+        if (this.ui.img) {
+            ctx.drawImage(this.ui.img, this.ui.positionX + squareSize * this.ui.offset, this.ui.positionY + squareSize * this.ui.offset, squareSize * this.ui.size, squareSize * this.ui.size)
+        } else {
+            this.ui.img = new Image()
+            this.ui.img.onload = (() => {
+                ctx.drawImage(this.ui.img, this.ui.positionX + squareSize * this.ui.offset, this.ui.positionY + squareSize * this.ui.offset, squareSize * this.ui.size, squareSize * this.ui.size)
+            })
+        }
 
-        img.src = this.textures.getSvgScr(this.type, this.side)
+        this.ui.img.src = this.textures.getSvgScr(this.type, this.side)
 
         // ctx.beginPath();
         // ctx.arc(this.position.x * squareSize + squareSize/2, this.position.y * squareSize + squareSize/2, squareSize/3, 0, 2 * Math.PI);
