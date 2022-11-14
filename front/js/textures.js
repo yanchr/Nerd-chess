@@ -4,13 +4,15 @@ class Textures {
     createSvg(figure, color) {
         const object = document.createElement('object')
         object.type = 'image/svg+xml'
-        object.data = `assets/svg/${figure}-${color}.svg`
+        // object.data = `assets/svg/${figure}-${color}.svg`
+        object.data = `assets/set2/${figure}-${color}.svg`
         object.className = "figure"
         this.body.append(object)
         return object
     }
 
     getSvgScr(figure, colorChar) {
-        return `/front/assets/svg/${figure.toUpperCase()}-${colorChar}.svg`
+        // return `/front/assets/svg/${figure.toUpperCase()}-${colorChar}.svg`
+        return `/front/assets/set2/${figure.toUpperCase()}-${colorChar}.svg`
     }
 }

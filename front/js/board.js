@@ -16,9 +16,9 @@ class Board {
         this.states = {}; // holds additional states like who's turn it is etc.
 
         this.initiateSquares();
-        // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
-        this.buildFromFEN("rnbqkbnr/1P6/8/8/8/8/8/RNBQKBNR w KQkq - 0 1");
+        // this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
 
         // to store things like what square is selected when client uses mouse input (cringe)
         this.utility = {
@@ -51,8 +51,8 @@ class Board {
                     this.ui.ref_ctx.fillStyle = 'rgb(194, 194, 194)';
                     this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize);
                 }
-                this.ui.ref_ctx.fillStyle = 'rgb(0,0,255)';
-                this.ui.ref_ctx.fillText(this.convertPositionToStrLocation({x: x, y: y}), x * this.ui.squareSize, y * this.ui.squareSize+10)
+                // this.ui.ref_ctx.fillStyle = 'rgb(0,0,255)';
+                // this.ui.ref_ctx.fillText(this.convertPositionToStrLocation({x: x, y: y}), x * this.ui.squareSize, y * this.ui.squareSize+10)
                 // piece
                 if (this.squares[x][y]) {
                     this.squares[x][y].render(this.ui.ref_ctx, this.ui.squareSize);
@@ -228,6 +228,19 @@ class Board {
 
     updateEnPassantTargetSquare(strLocation = "-") {
         this.states.enPassantTargetSquare = strLocation;
+    }
+
+    getCastlingAbilityForPosition(position) {
+        if (position.x == 2 && position.y == 7 && this.states.castlingAbility.includes("Q")) {
+            return true;
+        } else if (position.x == 6 && position.y == 7 && this.states.castlingAbility.includes("K")) {
+            return true;
+        } else if (position.x == 2 && position.y == 0 && this.states.castlingAbility.includes("k")) {
+            return true;
+        } else if (position.x == 6 && position.y == 0 && this.states.castlingAbility.includes("q")) {
+            return true;
+        }
+        return false;
     }
 
     /* InitiationMethods */
