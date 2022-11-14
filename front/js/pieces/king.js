@@ -35,7 +35,6 @@ class King extends Piece {
     // validate Move
     validateCastle(targetSquare, pieceAtTarget, board) {
         const delta = targetSquare.x - this.position.x;
-        console.log("VALIDATE CASTLE")
         if (
             Math.abs(delta) == 2 &&
             (this.side == "w" ? 7 : 0) == this.position.y
@@ -43,25 +42,25 @@ class King extends Piece {
 
             const castleType = board.getCastlingAbilityForPosition(targetSquare);
             const rookTargetSquare = {x: this.position.x + delta / 2, y: this.position.y};
-            console.log("is on original square")
 
             if (board.squares[rookTargetSquare.x][rookTargetSquare.y]) {return false;}
-            console.log("rookTargetSquare is free")
-
 
             if (
                 castleType
             ) {
 
                 const rook = board.getRookForCastle(castleType);
-                const rookValidationSignature = rook.validateMove(rookTargetSquare, false, board)
-                console.log("caslteType still exists", rookValidationSignature, rook, targetSquare, rookTargetSquare)
+                if (
+                    rook
+                ) {
 
-                if (rookValidationSignature.isValidMove) {
-
-                    console.log("rooks path is free")
-                    console.log("you have castlingability")
-                    return {isValidMove: true, rook: rook, targetSquare: rookTargetSquare};
+                    const rookValidationSignature = rook.validateMove(rookTargetSquare, false, board)
+                    if (
+                        rookValidationSignature.isValidMove
+                    ) {
+    
+                        return {isValidMove: true, rook: rook, targetSquare: rookTargetSquare};
+                    }
                 }
             }
         }
