@@ -9,6 +9,7 @@ class Rook extends Piece {
         if (this.validateHorizontal(targetSquare, pieceAtTarget, board)) {
             return {isValidMove: true, exitCode: 2};
         }
+        // EXITCODE 3 is reserved for castling rooks
         return {isValidMove: false, exitCode: 0};
     }
     moveTo(validationSignature, targetSquare, pieceAtTarget, board) {

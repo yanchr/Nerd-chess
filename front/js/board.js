@@ -16,9 +16,9 @@ class Board {
         this.states = {}; // holds additional states like who's turn it is etc.
 
         this.initiateSquares();
-        this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
-        // this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
+        this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
 
         // to store things like what square is selected when client uses mouse input (cringe)
         this.utility = {
@@ -232,13 +232,13 @@ class Board {
 
     getCastlingAbilityForPosition(position) {
         if (position.x == 2 && position.y == 7 && this.states.castlingAbility.includes("Q")) {
-            return true;
+            return "Q";
         } else if (position.x == 6 && position.y == 7 && this.states.castlingAbility.includes("K")) {
-            return true;
+            return "K";
         } else if (position.x == 2 && position.y == 0 && this.states.castlingAbility.includes("k")) {
-            return true;
+            return "k";
         } else if (position.x == 6 && position.y == 0 && this.states.castlingAbility.includes("q")) {
-            return true;
+            return "q";
         }
         return false;
     }
@@ -261,6 +261,18 @@ class Board {
     }
     removeCastlingAbility(type) {
         this.states.castlingAbility = this.states.castlingAbility.replace(type,'');
+    }
+    getRookForCastle(castleType) {
+        if (castleType == "Q") {
+            return this.squares[0][7]
+        } else if (castleType == "K") {
+            return this.squares[7][7]
+        } else if (castleType == "q") {
+            return this.squares[7][0]
+        } else if (castleType == "k") {
+            return this.squares[0][0]
+        }
+        return undefined;
     }
 
     /* InitiationMethods */
