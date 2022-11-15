@@ -94,7 +94,7 @@ class Queen extends Piece {
 
     // Compute Checked Squares
 
-    computeCheckedSquares(board, invisiblePiece) {
+    computeCheckedSquares(board, invisibleSquare, occupiedSquare) {
         const list = [];
         var isValidDirection = [true, true, true, true];
         var step = 1;
@@ -106,7 +106,7 @@ class Queen extends Piece {
             const position3 = {x: this.position.x, y: this.position.y - step}
             if (isValidDirection[0]) {
                 if (board.positionIsOnBoard(position0)) {
-                    if (board.squares[position0.x][position0.y]) {
+                    if (this.skipSquareLogic(board, position0, invisibleSquare, occupiedSquare)) {
                         list.push(position0)
                         isValidDirection[0] = false;
                     } else {list.push(position0)} 
@@ -114,7 +114,7 @@ class Queen extends Piece {
             }
             if (isValidDirection[1]) {
                 if (board.positionIsOnBoard(position1)) {
-                    if (board.squares[position1.x][position1.y]) {
+                    if (this.skipSquareLogic(board, position1, invisibleSquare, occupiedSquare)) {
                         list.push(position1)
                         isValidDirection[1] = false;
                     } else {list.push(position1)} 
@@ -122,7 +122,7 @@ class Queen extends Piece {
             }
             if (isValidDirection[2]) {
                 if (board.positionIsOnBoard(position2)) {
-                    if (board.squares[position2.x][position2.y]) {
+                    if (this.skipSquareLogic(board, position2, invisibleSquare, occupiedSquare)) {
                         list.push(position2)
                         isValidDirection[2] = false;
                     } else {list.push(position2)} 
@@ -130,7 +130,7 @@ class Queen extends Piece {
             }
             if (isValidDirection[3]) {
                 if (board.positionIsOnBoard(position3)) {
-                    if (board.squares[position3.x][position3.y]) {
+                    if (this.skipSquareLogic(board, position3, invisibleSquare, occupiedSquare)) {
                         list.push(position3)
                         isValidDirection[3] = false;
                     } else {list.push(position3)} 
@@ -151,7 +151,7 @@ class Queen extends Piece {
             const position3 = {x: this.position.x - step, y: this.position.y - step}
             if (isValidDirection[0]) {
                 if (board.positionIsOnBoard(position0)) {
-                    if (board.squares[position0.x][position0.y]) {
+                    if (this.skipSquareLogic(board, position0, invisibleSquare, occupiedSquare)) {
                         list.push(position0)
                         isValidDirection[0] = false;
                     } else {list.push(position0)} 
@@ -159,7 +159,7 @@ class Queen extends Piece {
             }
             if (isValidDirection[1]) {
                 if (board.positionIsOnBoard(position1)) {
-                    if (board.squares[position1.x][position1.y]) {
+                    if (this.skipSquareLogic(board, position1, invisibleSquare, occupiedSquare)) {
                         list.push(position1)
                         isValidDirection[1] = false;
                     } else {list.push(position1)} 
@@ -167,7 +167,7 @@ class Queen extends Piece {
             }
             if (isValidDirection[2]) {
                 if (board.positionIsOnBoard(position2)) {
-                    if (board.squares[position2.x][position2.y]) {
+                    if (this.skipSquareLogic(board, position2, invisibleSquare, occupiedSquare)) {
                         list.push(position2)
                         isValidDirection[2] = false;
                     } else {list.push(position2)} 
@@ -175,7 +175,7 @@ class Queen extends Piece {
             }
             if (isValidDirection[3]) {
                 if (board.positionIsOnBoard(position3)) {
-                    if (board.squares[position3.x][position3.y]) {
+                    if (this.skipSquareLogic(board, position3, invisibleSquare, occupiedSquare)) {
                         list.push(position3)
                         isValidDirection[3] = false;
                     } else {list.push(position3)} 

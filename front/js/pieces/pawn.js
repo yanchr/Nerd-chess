@@ -92,7 +92,7 @@ class Pawn extends Piece {
 
     // Compute Checked Squares
 
-    computeCheckedSquares(board, invisiblePiece) {
+    computeCheckedSquares(board, invisibleSquare, occupiedSquare) {
         const list = [];
 
         let position = {x: this.position.x + 1, y: this.position.y + this.facingDirection}

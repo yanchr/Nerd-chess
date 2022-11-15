@@ -19,7 +19,7 @@ class Board {
         this.initiateSquares();
 
         // this.buildFromFEN();
-        this.buildFromFEN("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
+        this.buildFromFEN("b3k2b/r6r/q7/8/8/8/R6R/B3K2B w KQkq - 0 1");
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         // this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
 
@@ -91,9 +91,9 @@ class Board {
 
         if (piece && piece.side == this.states.activeSide) {
             const validationSignature = piece.validateMove(targetSquare, this.getPieceAtSquare(targetSquare), this);
-            const isUnpinned = true; 
+            const isPinned = piece.checkPin(targetSquare, this); 
 
-            if (validationSignature.isValidMove && isUnpinned) {
+            if (validationSignature.isValidMove && !isPinned) {
                 piece.moveTo(validationSignature, targetSquare, this.getPieceAtSquare(targetSquare), this);
 
                 this.hasChanged = true;
@@ -162,7 +162,8 @@ class Board {
                         break;
                     
                     case "k":
-                        this.squares[x][y] = new King(rows[y][i], {x: x, y: y})
+                        this.squares[x][y] = new King(rows[y][i], {x: x, y: y});
+                        this.squares[x][y].side == "w" ? this.wK = this.squares[x][y] : this.bK = this.squares[x][y];
                         x++;
                         break;
                 

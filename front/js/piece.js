@@ -69,7 +69,47 @@ class Piece {
         this.checkedSquares = checkedSquares;
 
     }
+    checkPin(targetSquare, board) {
+        let aimingPieces = board.checkedSquares[this.position.x][this.position.y];
 
+        for (let i = 0; i < aimingPieces.length; i++) {
+            if ("brqBRQ".includes(aimingPieces[i].type) && this.side != aimingPieces[i].side) {
+                let potentialCheckedSquares = aimingPieces[i].computeCheckedSquares(board, this.position, targetSquare)
+                
+                if (!(this.type == "k" || this.type == "K")) {
+                    if (aimingPieces[i].position.x == targetSquare.x && aimingPieces[i].position.y == targetSquare.y) {
+                        return false;
+                    }
+    
+                    if (potentialCheckedSquares.find(s => s.x == (this.side == "w" ? board.wK.position.x : board.bK.position.x) && s.y == (this.side == "w" ? board.wK.position.y : board.bK.position.y))) {
+                        return true;
+                    }
+                } else {
+                    if (aimingPieces[i].position.x == targetSquare.x && aimingPieces[i].position.y == targetSquare.y &&
+                        !(board.checkedSquares[aimingPieces[i].position.x][aimingPieces[i].position.y].find(p => p.side == this.side))) {
+                        return false;
+                    }
+                    if (potentialCheckedSquares.find(s => s.x == targetSquare.x && s.y == targetSquare.y)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+    skipSquareLogic(board, position, invisibleSquare, occupiedSquare) {
+        if (invisibleSquare && invisibleSquare.x == position.x && invisibleSquare.y == position.y) {
+            return false;
+        } 
+        if (occupiedSquare && occupiedSquare.x == position.x && occupiedSquare.y == position.y) {
+            return true;
+        }
+        if (board.squares[position.x][position.y]) {
+            return true;
+        }
+        return false
+    }
 }
 
 // board.list with [pieces] per square
