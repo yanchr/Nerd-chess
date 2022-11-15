@@ -18,8 +18,8 @@ class Board {
 
         this.initiateSquares();
 
-        // this.buildFromFEN();
-        this.buildFromFEN("b3k2b/r6r/q7/8/8/8/R6R/B3K2B w KQkq - 0 1");
+        this.buildFromFEN();
+        // this.buildFromFEN("b3k2b/r6r/q7/8/8/8/R6R/B3K2B w KQkq - 0 1");
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         // this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
 
