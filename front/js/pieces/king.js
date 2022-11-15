@@ -51,22 +51,22 @@ class King extends Piece {
             const castleType = board.getCastlingAbilityForPosition(targetSquare);
             const rookTargetSquare = {x: this.position.x + delta / 2, y: this.position.y};
 
-            if (board.squares[rookTargetSquare.x][rookTargetSquare.y]) {return false;}
+            if (board.checkedSquares[targetSquare.x][targetSquare.y].find(p => p.side != this.side)) {return {isValidMove: false};}
+            if (board.checkedSquares[rookTargetSquare.x][rookTargetSquare.y].find(p => p.side != this.side)) {return {isValidMove: false};}
+            if (board.checkedSquares[this.position.x][this.position.y].find(p => p.side != this.side)) {return {isValidMove: false};}
 
+            if (board.squares[rookTargetSquare.x][rookTargetSquare.y]) {return {isValidMove: false};}
             if (
                 castleType
             ) {
-
                 const rook = board.getRookForCastle(castleType);
                 if (
                     rook
                 ) {
-
                     const rookValidationSignature = rook.validateMove(rookTargetSquare, false, board)
                     if (
                         rookValidationSignature.isValidMove
                     ) {
-    
                         return {isValidMove: true, rook: rook, targetSquare: rookTargetSquare};
                     }
                 }
@@ -85,6 +85,7 @@ class King extends Piece {
             Math.abs(deltaX) + Math.abs(deltaY) <= 2 &&
             (!pieceAtTarget || pieceAtTarget.side != this.side)
             ) {
+            if (board.checkedSquares[targetSquare.x][targetSquare.y].find(p => p.side != this.side)) {return false}
             return true;
         }
         return false;

@@ -18,8 +18,8 @@ class Board {
 
         this.initiateSquares();
 
-        this.buildFromFEN();
-        // this.buildFromFEN("8/1K6/8/4p3/8/8/8/8 w KQkq - 0 1");
+        // this.buildFromFEN();
+        this.buildFromFEN("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         // this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
 
@@ -248,10 +248,10 @@ class Board {
     mouseInput(mouseLocation) {
         const square = {x: Math.floor(mouseLocation.x / this.ui.squareSize), y: Math.floor(mouseLocation.y / this.ui.squareSize)}
         
-        if (!this.utility.selected) {
+        if (!this.utility.selected && this.squares[square.x][square.y]) {
             this.utility.selected = square;
             console.log(`Selected Square: ${JSON.stringify(square)}`)
-        } else {
+        } else if (this.utility.selected) {
             this.tryMove(this.utility.selected, square);
             console.log(`Try Move: ${JSON.stringify(this.utility.selected)} to ${JSON.stringify(square)}`)
             this.utility.selected = false;
@@ -293,10 +293,10 @@ class Board {
             return "Q";
         } else if (position.x == 6 && position.y == 7 && this.states.castlingAbility.includes("K")) {
             return "K";
-        } else if (position.x == 2 && position.y == 0 && this.states.castlingAbility.includes("k")) {
-            return "k";
-        } else if (position.x == 6 && position.y == 0 && this.states.castlingAbility.includes("q")) {
+        } else if (position.x == 2 && position.y == 0 && this.states.castlingAbility.includes("q")) {
             return "q";
+        } else if (position.x == 6 && position.y == 0 && this.states.castlingAbility.includes("k")) {
+            return "k";
         }
         return false;
     }
@@ -326,9 +326,9 @@ class Board {
         } else if (castleType == "K") {
             return this.squares[7][7]
         } else if (castleType == "q") {
-            return this.squares[7][0]
-        } else if (castleType == "k") {
             return this.squares[0][0]
+        } else if (castleType == "k") {
+            return this.squares[7][0]
         }
         return undefined;
     }
