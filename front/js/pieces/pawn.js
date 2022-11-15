@@ -39,13 +39,22 @@ class Pawn extends Piece {
                 console.error('En Passant Piece not Found')
             }
         }
+
+        const oldPosition = Object.assign({}, this.position);
+
         board.squares[targetSquare.x][targetSquare.y] = this;
         board.squares[this.position.x][this.position.y] = false;
 
         this.position.x = targetSquare.x;
         this.position.y = targetSquare.y;
+
+        this.updateCheckedSquares(board, false);
+        board.updateCheckedSquaresByPieceFromPosition(oldPosition);
+        board.updateCheckedSquaresByPieceFromPosition(this.position);
     }
     isTaken(board) {
+        const checkedSquares = this.computeCheckedSquares(board, false);
+        board.removeCheckedSquares(checkedSquares, this);
         board.squares[this.position.x][this.position.y] = false;
     }
 

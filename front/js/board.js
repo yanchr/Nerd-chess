@@ -18,15 +18,18 @@ class Board {
 
         this.initiateSquares();
 
-        // this.buildFromFEN();
-
-        this.buildFromFEN("4p3/8/8/8/8/8/8/3P4 w KQkq - 0 1");
+        this.buildFromFEN();
+        // this.buildFromFEN("8/1K6/8/4p3/8/8/8/8 w KQkq - 0 1");
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         // this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
 
         // to store things like what square is selected when client uses mouse input (cringe)
         this.utility = {
             selected: false,
+        }
+        this.debug = {
+            showCheckedSquares: true,
+            showSquareLocations: false,
         }
     }
 
@@ -55,8 +58,20 @@ class Board {
                     this.ui.ref_ctx.fillStyle = 'rgb(194, 194, 194)';
                     this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize);
                 }
-                // this.ui.ref_ctx.fillStyle = 'rgb(0,0,255)';
-                // this.ui.ref_ctx.fillText(this.convertPositionToStrLocation({x: x, y: y}), x * this.ui.squareSize, y * this.ui.squareSize+10)
+                // draw square names
+                if (this.debug.showSquareLocations) {
+                    this.ui.ref_ctx.fillStyle = 'rgb(0,0,255)';
+                    this.ui.ref_ctx.fillText(this.convertPositionToStrLocation({x: x, y: y}), x * this.ui.squareSize, y * this.ui.squareSize+10)
+                }
+                // draw checkedSquares
+                if (this.debug.showCheckedSquares ) {
+                    this.ui.ref_ctx.fillStyle = 'rgb(100,100,255)';
+                    var pieces = "";
+                    for (let index = 0; index < this.checkedSquares[x][y].length; index++) {
+                        pieces += this.checkedSquares[x][y][index].type;
+                    }
+                    this.ui.ref_ctx.fillText(pieces, x * this.ui.squareSize, y * this.ui.squareSize+10)
+                }
                 // piece
                 if (this.squares[x][y]) {
                     this.squares[x][y].render(this.ui.ref_ctx, this.ui.squareSize);
@@ -76,8 +91,7 @@ class Board {
 
         if (piece && piece.side == this.states.activeSide) {
             const validationSignature = piece.validateMove(targetSquare, this.getPieceAtSquare(targetSquare), this);
-            const isUnpinned = true; // no clue how to check that so problem for future us
-            // a way to solve this would be to have a seperate represantation of the board that stores per square wether or not it is endagered by either/or black and white
+            const isUnpinned = true; 
 
             if (validationSignature.isValidMove && isUnpinned) {
                 piece.moveTo(validationSignature, targetSquare, this.getPieceAtSquare(targetSquare), this);
@@ -94,7 +108,6 @@ class Board {
     /* FEN Converters */
 
     buildFromFEN(FENString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
-        console.log(this.squares)
         // translate FEN string into this.squares array
         const parts = FENString.split(" ");
         const board = parts[0];
@@ -161,12 +174,9 @@ class Board {
                         x += n;
                         break;
                 }
-                if (this.squares[x][y]) {
-                    console.log(this.squares,x, y)
-                    this.squares[x][y].updateCheckedSquares(this)
-                }
             }
         }
+        this.computeCheckedSquares();
     }
     getFEN() {
         let board = "";
@@ -198,6 +208,39 @@ class Board {
         }
 
         return `${board} ${this.states.activeSide} ${this.states.castlingAbility} ${this.states.enPassantTargetSquare} ${this.states.halfMoveClock} ${this.states.fullMoveNumber}`;
+    }
+
+    /* CheckedSquares */
+
+    computeCheckedSquares() {
+        for (let x = 0; x < this.squares.length; x++) {
+            for (let y = 0; y < this.squares[x].length; y++) {
+                if (this.squares[x][y]) {
+                    this.squares[x][y].updateCheckedSquares(this);
+                }
+            }
+        }
+        console.log(this.checkedSquares)
+    }
+    removeCheckedSquares(list, piece) {
+        for (let i = 0; i < list.length; i++) {
+            let index = this.checkedSquares[list[i].x][list[i].y].findIndex(p => p === piece);
+            if (index >= 0) {
+                this.checkedSquares[list[i].x][list[i].y].splice(index, 1);
+            } else {
+                console.error("A piece was not found in a checkedSquares array")
+            }
+        }
+    }
+    addNewCheckedSquares(list, piece) {
+        for (let i = 0; i < list.length; i++) {
+            this.checkedSquares[list[i].x][list[i].y].push(piece);
+        }
+    }
+    updateCheckedSquaresByPieceFromPosition(position) {
+        for (let i = 0; i < this.checkedSquares[position.x][position.y].length; i++) {
+            this.checkedSquares[position.x][position.y][i].updateCheckedSquares(this);
+        }
     }
 
     /* InputHandlers */
@@ -233,10 +276,7 @@ class Board {
         return `${String.fromCharCode(position.x+97)}${8-position.y}`;
     }
     positionIsOnBoard(position) {
-        if (position.x >= 0 && position.x < 8) {
-            return true;
-        }
-        if (position.y >= 0 && position.y < 8) {
+        if (position.x >= 0 && position.x < 8 && position.y >= 0 && position.y < 8) {
             return true;
         }
         return false;
@@ -304,7 +344,7 @@ class Board {
             this.checkedSquares.push([]);
             for (let y = 0; y < 8; y++) {
                 this.squares[x][y] = false;
-                this.squares[x][y] = [];
+                this.checkedSquares[x][y] = [];
             }
         }
         this.states = {

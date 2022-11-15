@@ -46,7 +46,7 @@ class Piece {
         // a function that is same for all pieces that shows a linear interpolation of the old to the new position (optional)
     }
     updateCheckedSquares(board, invisiblePiece = false) {
-        const oldCheckedSquares = this.checkedSquares;
+        const oldCheckedSquares = [...this.checkedSquares];
         const newCheckedSquares = [];
         const checkedSquares = this.computeCheckedSquares(board, invisiblePiece);
         for (let i = 0; i < checkedSquares.length; i++) {
@@ -62,12 +62,11 @@ class Piece {
                 newCheckedSquares.push(checkedSquares[i])
             }
         }
-        // this.checkedSquares unchanged
-        // oldCheckedSquares holds the ones that are no longer checked
-        // newCheckedSquares holds the ones that are newly checked
 
-        console.log(oldCheckedSquares, newCheckedSquares)
+        board.removeCheckedSquares(oldCheckedSquares, this);
+        board.addNewCheckedSquares(newCheckedSquares, this);
 
+        this.checkedSquares = checkedSquares;
 
     }
 
