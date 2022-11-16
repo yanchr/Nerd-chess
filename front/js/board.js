@@ -103,7 +103,12 @@ class Board {
     }
 
     evaluateCheckMate(king) {
-        const list = king.computeCheckedSquares(this);
+        var list = this.checkedSquares[king.position.x][king.position.y]
+        let el = list.find(p => p.side != king.side);
+        if (!el) {
+            return;
+        }
+        list = king.computeCheckedSquares(this);
         for (let i = 0; i < list.length; i++) {
             if (this.positionIsOnBoard(list[i])) {
                 let aimingPieces = this.checkedSquares[list[i].x][list[i].y]
