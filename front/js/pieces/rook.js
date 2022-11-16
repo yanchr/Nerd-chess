@@ -32,6 +32,7 @@ class Rook extends Piece {
         board.updateCheckedSquaresByPieceFromPosition(this.position);
     }
     isTaken(board) {
+        board.updateCastlingAbility(this.position);
         const checkedSquares = this.computeCheckedSquares(board, false);
         board.removeCheckedSquares(checkedSquares, this);
         board.squares[this.position.x][this.position.y] = false;
@@ -73,7 +74,7 @@ class Rook extends Piece {
 
     // Compute Checked Squares
 
-    computeCheckedSquares(board, invisibleSquare, occupiedSquare) {
+    computeCheckedSquares(board, invisibleSquare, occupiedSquare, enPassantSquare = false) {
         const list = [];
         const isValidDirection = [true, true, true, true];
         let step = 1;
@@ -85,7 +86,7 @@ class Rook extends Piece {
             const position3 = {x: this.position.x, y: this.position.y - step}
             if (isValidDirection[0]) {
                 if (board.positionIsOnBoard(position0)) {
-                    if (this.skipSquareLogic(board, position0, invisibleSquare, occupiedSquare)) {
+                    if (this.skipSquareLogic(board, position0, invisibleSquare, occupiedSquare, enPassantSquare)) {
                         list.push(position0)
                         isValidDirection[0] = false;
                     } else {list.push(position0)} 
@@ -93,7 +94,7 @@ class Rook extends Piece {
             }
             if (isValidDirection[1]) {
                 if (board.positionIsOnBoard(position1)) {
-                    if (this.skipSquareLogic(board, position1, invisibleSquare, occupiedSquare)) {
+                    if (this.skipSquareLogic(board, position1, invisibleSquare, occupiedSquare, enPassantSquare)) {
                         list.push(position1)
                         isValidDirection[1] = false;
                     } else {list.push(position1)} 
@@ -101,7 +102,7 @@ class Rook extends Piece {
             }
             if (isValidDirection[2]) {
                 if (board.positionIsOnBoard(position2)) {
-                    if (this.skipSquareLogic(board, position2, invisibleSquare, occupiedSquare)) {
+                    if (this.skipSquareLogic(board, position2, invisibleSquare, occupiedSquare, enPassantSquare)) {
                         list.push(position2)
                         isValidDirection[2] = false;
                     } else {list.push(position2)} 
@@ -109,7 +110,7 @@ class Rook extends Piece {
             }
             if (isValidDirection[3]) {
                 if (board.positionIsOnBoard(position3)) {
-                    if (this.skipSquareLogic(board, position3, invisibleSquare, occupiedSquare)) {
+                    if (this.skipSquareLogic(board, position3, invisibleSquare, occupiedSquare, enPassantSquare)) {
                         list.push(position3)
                         isValidDirection[3] = false;
                     } else {list.push(position3)} 

@@ -33,8 +33,13 @@ class Pawn extends Piece {
         }
         if (validationSignature.exitCode == 4) {
             let target = this.getEnPassantTarget(targetSquare, board)
+            let square = {x: targetSquare.x, y: this.position.y}
             if (target) {
                 target.isTaken(board);
+                const aimingPieces = board.checkedSquares[square.x][square.y];
+                for (let i = 0; i < aimingPieces.length; i++) {
+                    aimingPieces[i].updateCheckedSquares(board, false);
+                }
             } else {
                 console.error('En Passant Piece not Found')
             }
@@ -51,6 +56,7 @@ class Pawn extends Piece {
         this.updateCheckedSquares(board, false);
         board.updateCheckedSquaresByPieceFromPosition(oldPosition);
         board.updateCheckedSquaresByPieceFromPosition(this.position);
+        this.checkPromotion(board);
     }
     isTaken(board) {
         const checkedSquares = this.computeCheckedSquares(board, false);
@@ -84,7 +90,27 @@ class Pawn extends Piece {
         return false;
     }
     validateEnPassant(targetSquare, pieceAtTarget, board) {
-        if (((this.position.x+1 == targetSquare.x && !board.getPieceAtSquare({x: this.position.x+1, y: this.position.y + this.facingDirection})) || (this.position.x-1 == targetSquare.x && !board.getPieceAtSquare({x: this.position.x-1, y: this.position.y + this.facingDirection}))) && this.position.y + this.facingDirection == targetSquare.y && !pieceAtTarget && board.states.enPassantTargetSquare == board.convertPositionToStrLocation(targetSquare)) {
+        if (
+            (
+                (
+                    this.position.x+1 == targetSquare.x && !board.getPieceAtSquare({x: this.position.x+1, y: this.position.y + this.facingDirection})
+                ) || (
+                    this.position.x-1 == targetSquare.x && !board.getPieceAtSquare({x: this.position.x-1, y: this.position.y + this.facingDirection})
+                )
+            ) && this.position.y + this.facingDirection == targetSquare.y && !pieceAtTarget && board.states.enPassantTargetSquare == board.convertPositionToStrLocation(targetSquare)
+        ) {
+            const square = {x: targetSquare.x, y: targetSquare.y - this.facingDirection}
+            const aimingPieces = board.checkedSquares[square.x][square.y]
+            for (let i = 0; i < aimingPieces.length; i++) {
+                if (aimingPieces[i].side != this.side) {
+                    const list = aimingPieces[i].computeCheckedSquares(board, this.position, targetSquare, square)
+                    const kingsSquare = list.find(s => s.x == (this.side == "w" ? board.wK.position.x : board.bK.position.x) && s.y == (this.side == "w" ? board.wK.position.y : board.bK.position.y))
+                    if (kingsSquare) {
+                        return false;
+                    }
+                }
+            }
+
             return true;
         }
         return false;
@@ -105,5 +131,15 @@ class Pawn extends Piece {
         }
 
         return list;
+    }
+
+    // check promotion
+    checkPromotion(board) {
+        const promotionRank = (this.side == "w" ? 0 : 7);
+        if (this.position.y == promotionRank) {
+            const position = this.position;
+            board.squares[position.x][position.y] = new Queen((this.side == "w" ? "Q" : "q"), position)
+            board.squares[position.x][position.y].updateCheckedSquares(board)
+        }
     }
 }

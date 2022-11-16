@@ -19,7 +19,7 @@ class Board {
         this.initiateSquares();
 
         this.buildFromFEN();
-        // this.buildFromFEN("b3k2b/r6r/q7/8/8/8/R6R/B3K2B w KQkq - 0 1");
+        // this.buildFromFEN("6r1/8/2K5/8/1R6/8/4Q3/7k w KQk - 0 14");
         // this.buildFromFEN("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"); // test for after move e4
         // this.buildFromFEN("r3k2r/pp4pp/8/8/8/8/PP4PP/R3K2R w KQkq - 0 1");
 
@@ -54,7 +54,7 @@ class Board {
         for (let x = 0; x < this.squares.length; x++) {
             for (let y = 0; y < this.squares[x].length; y++) {
                 // squares
-                if ((x+y) % 2 == 0) { // alte wenn dä nid genius isch weiss ich au nid
+                if ((x+y) % 2 == 0) {
                     this.ui.ref_ctx.fillStyle = 'rgb(194, 194, 194)';
                     this.ui.ref_ctx.fillRect(x * this.ui.squareSize, y * this.ui.squareSize, this.ui.squareSize, this.ui.squareSize);
                 }
@@ -81,28 +81,39 @@ class Board {
     }
 
     tryMove(sourceSquare, targetSquare) {
-
-        // check if source has piece
-        // execute validation from that piece
-        // execute moving from that piece (since e.g. castling involves more that one piece)
-        // if isValid -> advance movecount, change color etc.
-
         const piece = this.getPieceAtSquare(sourceSquare)
 
         if (piece && piece.side == this.states.activeSide) {
             const validationSignature = piece.validateMove(targetSquare, this.getPieceAtSquare(targetSquare), this);
             const isPinned = piece.checkPin(targetSquare, this); 
+            const kingIsSave = piece.protectsKing(targetSquare, this)
 
-            if (validationSignature.isValidMove && !isPinned) {
+            if (validationSignature.isValidMove && !isPinned && kingIsSave) {
                 piece.moveTo(validationSignature, targetSquare, this.getPieceAtSquare(targetSquare), this);
 
                 this.hasChanged = true;
+                this.states.activeSide == "w" ? this.evaluateCheckMate(this.bK) : this.evaluateCheckMate(this.wK);
                 this.states.activeSide == "w" ? this.states.activeSide = "b" : this.states.activeSide = "w";
                 if (this.states.activeSide == "w") {
                     this.states.fullMoveNumber++;
                 }
+                
             }
         }
+    }
+
+    evaluateCheckMate(king) {
+        const list = king.computeCheckedSquares(this);
+        for (let i = 0; i < list.length; i++) {
+            if (this.positionIsOnBoard(list[i])) {
+                let aimingPieces = this.checkedSquares[list[i].x][list[i].y]
+                let enemy = aimingPieces.find(p => p.side != king.side);
+                if (!enemy && !this.squares[list[i].x][list[i].y]) {
+                    return;
+                }
+            }
+        }
+        return console.log("CHECKMATE")
     }
 
     /* FEN Converters */
@@ -221,7 +232,6 @@ class Board {
                 }
             }
         }
-        console.log(this.checkedSquares)
     }
     removeCheckedSquares(list, piece) {
         for (let i = 0; i < list.length; i++) {

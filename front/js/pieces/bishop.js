@@ -40,8 +40,6 @@ class Bishop extends Piece {
         const nDeltaX = deltaX / Math.abs(deltaX);
         const nDeltaY = deltaY / Math.abs(deltaY);
 
-        console.log(deltaX, deltaY, nDeltaX, nDeltaY)
-
         if (Math.abs(deltaX) == Math.abs(deltaY)) {
             for (let step = 1; step < Math.abs(deltaX); step++) {
                 if (board.squares[this.position.x + step * nDeltaX][this.position.y + step * nDeltaY]) {
