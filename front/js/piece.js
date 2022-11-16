@@ -98,8 +98,9 @@ class Piece {
 
         return false;
     }
-    skipSquareLogic(board, position, invisibleSquare, occupiedSquare) {
-        if (invisibleSquare && invisibleSquare.x == position.x && invisibleSquare.y == position.y) {
+    skipSquareLogic(board, position, invisibleSquare, occupiedSquare, enPassantSquare = false) {
+        if ((invisibleSquare && invisibleSquare.x == position.x && invisibleSquare.y == position.y) ||
+        (enPassantSquare && enPassantSquare.x == position.x && enPassantSquare.y == position.y)) {
             return false;
         } 
         if (occupiedSquare && occupiedSquare.x == position.x && occupiedSquare.y == position.y) {
@@ -109,6 +110,35 @@ class Piece {
             return true;
         }
         return false
+    }
+
+    protectsKing(targetSquare, board) {
+        const king = (this.side == "w" ? board.wK : board.bK)
+        
+        if (this == king) {
+            const aimAtTarget = board.checkedSquares[targetSquare.x][targetSquare.y];
+            const enemy = aimAtTarget.find(p => p.side != this.side)
+            if (enemy) {
+                return false;
+            }
+            return true;
+        }
+        
+        const aimingPieces = board.checkedSquares[king.position.x][king.position.y];
+        for (let i = 0; i < aimingPieces.length; i++) {
+            if (aimingPieces[i].side != this.side) {
+                const potentialCheckedSquares = aimingPieces[i].computeCheckedSquares(board, this.position, targetSquare);
+                const square = potentialCheckedSquares.find(s => s.x == king.position.x && s.y == king.position.y);
+                
+                if (targetSquare.x == aimingPieces[i].position.x && targetSquare.y == aimingPieces[i].position.y) {
+
+                } else if (square) {
+                    return false;
+                }
+                
+            }
+        }
+        return true;
     }
 }
 
