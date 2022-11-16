@@ -28,7 +28,7 @@ class Board {
             selected: false,
         }
         this.debug = {
-            showCheckedSquares: true,
+            showCheckedSquares: false,
             showSquareLocations: false,
         }
     }
